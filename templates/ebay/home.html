@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
+      <div class="flex items-center flex-shrink-0 text-dark mr-6">
+        <svg
+          class="fill-current h-8 w-8 mr-2"
+          width="54"
+          height="54"
+          viewBox="0 0 54 54"
+          xmlns=""
+        >
+          <img src="{% static 'images/logo1.png' %}" alt="ebay" />
+        </svg>
+        <span class="font-semibold text-xl tracking-tight">Auction Site</span>
+      </div>
+
+      <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+        <div class="text-sm lg:flex-grow"></div>
+        <div>
+          <a
+            href="{% url 'ebay:login' %}"
+            class="
+              inline-block
+              text-sm
+              px-4
+              py-2
+              leading-none
+              border
+              rounded
+              text-white
+              border-white
+              hover:border-transparent hover:text-teal-500 hover:bg-white
+              mt-4
+              lg:mt-0
+            "
+            >Login</a
+          >
+          <a
+            href="{% url 'ebay:register' %}"
+            class="
+              inline-block
+              text-sm
+              px-4
+              py-2
+              leading-none
+              border
+              rounded
+              text-white
+              border-white
+              hover:border-transparent hover:text-teal-500 hover:bg-white
+              mt-4
+              lg:mt-0
+            "
+            >Register</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    {% for Product in products %} 
+
+    <div class="card mx-auto mb-3" style="width: 15rem">
+    {% comment %} <a href="{% url 'ebay:addproduct' pid=Product.p_id %}" {% endcomment %}
+      <a href=""
+        ><img
+          class="card-img-top"
+          src="{{Product.p_photo.url}}"
+          alt="Card image cap"
+      /></a>
+    
+      <div class = "grid grid-cols-1 md:grid-cols-6">
+      <div class="">
+        <p class="">{{Product.pname}}</p>
+        <p class=""><b>{{Product.min_bid}}</b></p>
+      </div>
+      </div>
+    {% endfor %}
+
+
+  </body>
+</html>
+
+
+{% comment %}
+<form class="d-flex">
+  <input
+    class="form-control me-6"
+    type="search"
+    placeholder="Search"
+    aria-label="Search"
+  />
+  <button class="btn btn-outline-success me-4" type="submit">Search</button>
+</form>
+{% endcomment %}
