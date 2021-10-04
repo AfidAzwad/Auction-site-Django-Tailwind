@@ -6,23 +6,25 @@ from . import models
 
 class adminLogin(forms.ModelForm):
     a_email = forms.EmailField(widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': "email"}), label='')
+        attrs={'class': 'shadow w-full py-2 px-3 bg-body rounded focus:outline-none focus:shadow-outline', 'placeholder': "email"}), label='')
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': "password"}), label='')
+        attrs={'class': 'shadow w-full py-2 px-3 bg-body rounded focus:outline-none focus:shadow-outline', 'placeholder': "password"}), label='')
 
     class Meta:
         model = models.CUSTOMER
-        fields = ('a_email','password')
+        fields = ('a_email', 'password')
+
 
 class LoginForm(forms.ModelForm):
     c_email = forms.EmailField(widget=forms.EmailInput(
-        attrs={'class': 'form-control', 'placeholder': "email"}), label='')
+        attrs={'class': 'shadow w-full py-2 px-3 bg-body rounded focus:outline-none focus:shadow-outline', 'placeholder': "email"}), label='')
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': "password"}), label='')
+        attrs={'class': 'shadow w-full py-2 px-3 bg-body rounded focus:outline-none focus:shadow-outline', 'placeholder': "password"}), label='')
 
     class Meta:
         model = models.CUSTOMER
-        fields = ('c_email','password')
+        fields = ('c_email', 'password')
+
 
 class SignUpForm(forms.ModelForm):
     cname = forms.CharField(widget=forms.TextInput(

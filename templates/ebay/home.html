@@ -10,6 +10,34 @@
       rel="stylesheet"
     />
 
+    <style>
+      .card-img-top {
+              width: 100%;
+              height: 12vw;
+              object-fit: contain;
+              display : flex;
+            }
+      .searchbox{
+        position: absolute;
+        right: 0px;
+        width: 300px;
+      }
+      @media screen and (max-width: 768px) {
+     .card-img-top {
+            height: 55vw;
+    }
+      }
+    
+    @media screen and (max-width: 380px) 
+    {
+    .searchbox{
+           position: relative;
+           width: 97%;
+    }
+    }
+
+
+    </style>
     <title>{{ title }}</title>
   </head>
   <body>
@@ -70,38 +98,68 @@
       </div>
     </nav>
 
-    {% for Product in products %} 
+<div class = "searchbox">
+<form class="w-full max-w-sm">
 
-    <div class="card mx-auto mb-3" style="width: 15rem">
-    {% comment %} <a href="{% url 'ebay:addproduct' pid=Product.p_id %}" {% endcomment %}
-      <a href=""
-        ><img
-          class="card-img-top"
-          src="{{Product.p_photo.url}}"
-          alt="Card image cap"
-      /></a>
+  <div class="flex items-center border-b border-teal-500 py-2">
+    <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="search">
+    <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit">
+      Search
+    </button>
+  </div>
+</form>
+
+
+ </div>
+
+    <div class="container my-12 mx-auto px-4 md:px-12">
     
-      <div class = "grid grid-cols-1 md:grid-cols-6">
-      <div class="">
-        <p class="">{{Product.pname}}</p>
-        <p class=""><b>{{Product.min_bid}}</b></p>
+      <div class="flex flex-wrap -mx-1 lg:-mx-4">
+      
+        <!-- Column -->
+        {% for Product in products %}
+        <div class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+          <!-- Article -->
+          <article class="overflow-hidden rounded-lg shadow-lg">
+            <a href="#">
+              <img
+                alt="Placeholder"
+                class="card-img-top"
+                src="{{Product.p_photo.url}}"
+              />
+            </a>
+
+            <header
+              class="flex items-center justify-between leading-tight p-2 md:p-4"
+            >
+              <h1 class="text-lg">
+                  {{Product.pname}}
+              </h1>
+
+            </header>
+
+            <footer
+              class="flex items-center justify-between leading-none p-2 md:p-4"
+            >
+
+                <p class="ml-2 text-sm">{{Product.min_bid}}</p>
+
+            </footer>
+          </article>
+          <!-- END Article -->
+        </div>
+        <!-- END Column -->
+               {% endfor %}
       </div>
-      </div>
-    {% endfor %}
+   
+               </div>
+              
+   
+    </div>
 
 
+     
   </body>
 </html>
 
 
-{% comment %}
-<form class="d-flex">
-  <input
-    class="form-control me-6"
-    type="search"
-    placeholder="Search"
-    aria-label="Search"
-  />
-  <button class="btn btn-outline-success me-4" type="submit">Search</button>
-</form>
-{% endcomment %}

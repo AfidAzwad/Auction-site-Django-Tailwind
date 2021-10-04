@@ -30,6 +30,12 @@
   
 }
 .isDisabled {
+  display: block;
+  padding: .5rem 1rem;
+  border: 0;
+  border-radius: .25rem;
+  padding-right: 0!important;
+  padding-left: 0!important;
   color: currentColor;
   cursor: not-allowed;
   opacity: 0.5;
@@ -78,7 +84,7 @@
                 >
 
                   <li class="w-100">
-                    <a href="/" class="nav-link px-0">
+                    <a href="{% url 'ebay:admindash' %}" class="nav-link px-0">
                       Home
                     </a>
                   </li>
@@ -98,6 +104,11 @@
                    <li>
                     <a class="isDisabled">
                       Change password
+                    </a>
+                  </li>
+                  <li>
+                    <a class="isDisabled">
+                      Add Admin
                     </a>
                   </li>
                   <li>

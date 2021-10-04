@@ -36,7 +36,7 @@ def login(request):
     #         messages.success(request,'Account created')
     #         return customers(request)
 
-    diction = {'title': "Login", 'registerfomr': form}
+    diction = {'title': "Login", 'loginform': form}
     # diction = {'title' : "login"}
     return render(request, 'ebay/login.html', context=diction)
 
