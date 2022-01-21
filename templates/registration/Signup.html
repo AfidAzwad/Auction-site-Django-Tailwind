@@ -36,7 +36,8 @@
           class="bg-HoneyDew shadow-xl rounded px-8 pt-6 pb-8 mb-4"
           method="POST"
           action="{% url 'ebay:signup' %}"
-        > {% csrf_token %}
+        >
+          {% csrf_token %}
           <h4 class="header">Registration</h4>
           <div class="mb-4">
             <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
@@ -95,28 +96,21 @@
 
           <div class="flex items-center justify-between">
             <a
-              class="
-                inline-block
-                align-baseline
-                font-bold
-                text-sm text-blue-500
-                hover:text-blue-800
-              "
+              class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
               href="{% url 'login' %}"
             >
               want to login ?
             </a>
+            {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<br>
             <button
-              class="
-                bg-blue-500
-                hover:bg-blue-700
-                text-white
-                font-bold
-                py-2
-                px-4
-                rounded
-                focus:outline-none focus:shadow-outline
-              "
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               Register
@@ -124,7 +118,7 @@
           </div>
         </form>
         <p class="text-center text-gray-700 text-xs">
-          &copy;2021 Azwad Corp. All rights reserved.
+          &copy;2021 AMA Soft All rights reserved.
         </p>
         <br />
       </div>

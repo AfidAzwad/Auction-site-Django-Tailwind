@@ -1,1 +1,5 @@
-.\ebayenv\Scripts\activate
+creating folder : virtualenv projectname
+
+activating : .\ebayenv\Scripts\activate
+
+admin username : afid pass: afidafid email: md22@gmail.com

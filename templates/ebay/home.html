@@ -1,121 +1,58 @@
-<!DOCTYPE html>
+{% extends './base.html' %}
 {% load static %}
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link
-      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
 
-    <style>
-      .card-img-top {
-              width: 100%;
-              height: 12vw;
-              object-fit: contain;
-              display : flex;
-            }
-      .searchbox{
-        position: absolute;
-        right: 0px;
-        width: 300px;
-      }
-      @media screen and (max-width: 768px) {
-     .card-img-top {
-            height: 55vw;
-    }
-      }
-    
-    @media screen and (max-width: 380px) 
-    {
-    .searchbox{
-           position: relative;
-           width: 97%;
-    }
-    }
-
-
-    </style>
-    <title>{{ title }}</title>
-  </head>
-  <body>
-    <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
-      <div class="flex items-center flex-shrink-0 text-dark mr-6">
-        <svg
-          class="fill-current h-8 w-8 mr-2"
-          width="54"
-          height="54"
-          viewBox="0 0 54 54"
-          xmlns=""
-        >
-          <img src="{% static 'images/logo1.png' %}" alt="ebay" />
-        </svg>
-        <span class="font-semibold text-xl tracking-tight">Auction Site</span>
-      </div>
-
-      <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <div class="text-sm lg:flex-grow"></div>
-        <div>
-          <a
-            href="{% url 'ebay:login' %}"
-            class="
-              inline-block
-              text-sm
-              px-4
-              py-2
-              leading-none
-              border
-              rounded
-              text-white
-              border-white
-              hover:border-transparent hover:text-teal-500 hover:bg-white
-              mt-4
-              lg:mt-0
-            "
-            >Login</a
-          >
-          <a
-            href="{% url 'ebay:register' %}"
-            class="
-              inline-block
-              text-sm
-              px-4
-              py-2
-              leading-none
-              border
-              rounded
-              text-white
-              border-white
-              hover:border-transparent hover:text-teal-500 hover:bg-white
-              mt-4
-              lg:mt-0
-            "
-            >Register</a
-          >
-        </div>
-      </div>
-    </nav>
-
-<div class = "searchbox">
-<form class="w-full max-w-sm">
-
-  <div class="flex items-center border-b border-teal-500 py-2">
-    <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="search">
-    <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit">
-      Search
-    </button>
-  </div>
+{% block content %}
+<style>
+  .card-img-top {
+          width: 100%;
+          height: 12vw;
+          object-fit: contain;
+          display : flex;
+        }
+  .searchbox{
+    position: absolute;
+    padding : 5px;
+    right: 0px;
+    width: 300px;
+    z-index: -1;
+  }
+  @media screen and (max-width: 768px) {
+ .card-img-top {
+        height: 55vw;
+}
+  }
+@media screen and (max-width: 430px)
+{
+.searchbox{
+       position: absolute;
+       items: center;
+       justify-content: center;
+       width: 98%;
+       left: 2%;
+}
+}
+</style>
+<div>
+<form class="w-full max-w-sm" method="GET" action="{% url 'ebay:home' %}">
+   <div class="container flex mx-auto">
+    <div class="flex fixed border-2 rounded">
+            <svg class="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24">
+                <path
+                    d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
+                </path>
+            </svg>
+        <input name="search" id="query" type="text" class="px-4 py-2 w-80" placeholder="search...">
+        <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit">
+          Search
+        </button>
+    </div>
+</div>
 </form>
 
-
- </div>
-
     <div class="container my-12 mx-auto px-4 md:px-12">
-    
       <div class="flex flex-wrap -mx-1 lg:-mx-4">
-      
+{% if products %}
         <!-- Column -->
         {% for Product in products %}
         <div class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
@@ -142,23 +79,27 @@
               class="flex items-center justify-between leading-none p-2 md:p-4"
             >
 
-                <p class="ml-2 text-sm">{{Product.min_bid}}</p>
+                <p class="ml-2 text-sm">Base price : <b>{{Product.min_bid}}</b></p>
 
             </footer>
           </article>
-          <!-- END Article -->
         </div>
-        <!-- END Column -->
                {% endfor %}
+      {% else %}
+
+              <h1 class="text-gray-500 text-xl  p-4 md:p-6">
+                 No products
+              </h1>
+
+               {% endif %}
       </div>
-   
                </div>
-              
-   
     </div>
 
+  </div>
 
-     
+
+{% endblock %}
   </body>
 </html>
 

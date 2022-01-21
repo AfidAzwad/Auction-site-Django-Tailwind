@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import LogoutView, VerificationView, LoginView
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -7,16 +8,18 @@ app_name = "ebay"
 
 
 urlpatterns = [
-    path('', views.homepage, name="homepage"),
-    path('login/', views.login, name="login"),
-    path('register/', views.register, name="register"),
-    path('admin/', views.adminlogin, name="adminlogin"),
-    path('admindash/', views.adminDash, name="admindash"),
+    path('', views.home, name="home"),
+    path('signup/', views.signup, name="signup"),
+    path('login', LoginView.as_view(), name="login"),
+    path('logout', LogoutView.as_view(), name="logout"),
+    path('activate/<uidb64>/<token>',
+          VerificationView.as_view(), name='activate'),
+    
     path('bidders/', views.bidder, name="bidder"),
     path('addproduct/', views.addproducts, name="addproduct"),
     # path('myproduct/', views.myproduct, name="myproduct"),
     path('update/<int:pid>/', views.update, name="update"),
-    path('<int:pid>/', views.deletion, name="delete"), 
+    path('<int:pid>/', views.deletion, name="delete"),
     # path('productinfo/<int:pid>/', views.productinfo, name="productinfo"),
 ]
 

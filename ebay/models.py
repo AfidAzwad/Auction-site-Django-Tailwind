@@ -1,17 +1,12 @@
 from django.db import models
+# from django.contrib.auth.models import AbstractUser
 
 
-class Admin(models.Model):
-    a_id = models.AutoField(primary_key=True)
-    aname = models.CharField(max_length=50)
-    a_email = models.EmailField(max_length=50)
-    password = models.CharField(max_length=50)
+# class User(AbstractUser):
+#     is_email_verified = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.aname
-
-# Create your models here.
-
+#     def __str__(self):
+#         return self.email
 
 class CUSTOMER(models.Model):
     c_id = models.AutoField(primary_key=True)
@@ -42,7 +37,7 @@ class PRODUCTS(models.Model):
 
 
 class BIDS(models.Model):
-    Serial = models.AutoField(primary_key=True)
+    b_id = models.AutoField(primary_key=True)
     pid = models.CharField(max_length=50)
     p_name = models.CharField(max_length=50)
     bider = models.EmailField(max_length=50)
