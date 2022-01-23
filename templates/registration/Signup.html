@@ -35,10 +35,12 @@
         <form
           class="bg-HoneyDew shadow-xl rounded px-8 pt-6 pb-8 mb-4"
           method="POST"
-          action="{% url 'ebay:signup' %}"
+          action="{% url 'accounts:register' %}"
         >
           {% csrf_token %}
+         
           <h4 class="header">Registration</h4>
+        
           <div class="mb-4">
             <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
               First Name
@@ -101,13 +103,14 @@
             >
               want to login ?
             </a>
-            {% if messages %}
+            {% include 'partials/_messages.html' %}
+            {% comment %} {% if messages %}
 <ul class="messages">
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
-{% endif %}
+{% endif %} {% endcomment %}
 <br>
             <button
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
