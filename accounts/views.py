@@ -19,6 +19,20 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.template.loader import render_to_string
 from .utils import token_generator
 from django.contrib import auth
+import threading
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import re
+
+specialCharacters = ['$', '#', '@', '!', '*']
+
+
+class EmailThread(threading.Thread):
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send(fail_silently=False)
 
 
 class RegistrationView(View):
@@ -33,7 +47,7 @@ class RegistrationView(View):
         email = request.POST.get('email')
         pwd1 = request.POST.get('password1')
         pwd2 = request.POST.get('password2')
-        if len(pwd1) < 8:
+        if len(pwd1) < 6:
             messages.add_message(request, messages.ERROR,
                                  'Password should be at least 6 characters')
         if pwd1 != pwd2:
@@ -74,7 +88,7 @@ class RegistrationView(View):
                 'noreply@semycolon.com',
                 [email],)
 
-            email.send(fail_silently=False)
+            EmailThread(email).start()
             messages.success(request, 'Please check your email to activate !')
             return redirect('login')
 
@@ -101,8 +115,6 @@ class LoginView(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.success(request, 'Welcome, ' +
-                                     user.username+' you are now logged in')
                     return redirect(reverse('ebay:home'))
                 messages.error(
                     request, 'Account is not active,please check your email')
@@ -123,7 +135,7 @@ class VerificationView(View):
             user = User.objects.get(pk=id)
 
             if not token_generator.check_token(user, token):
-                messages.success(request, 'Account already activated !')
+                messages.error(request, 'Account already activated !')
                 return redirect('login')
 
             if user.is_active:
@@ -135,7 +147,7 @@ class VerificationView(View):
             return redirect('login')
 
         except Exception as ex:
-            return render(request, 'authentication/activate-failed.html')
+            return render(request, 'registration/activate-failed.html')
 
         return redirect('login')
 
@@ -144,3 +156,98 @@ class LogoutView(View):
     def post(self, request):
         logout(request)
         return redirect(reverse('/'))
+
+
+class RequestPasswordReset(View):
+    def get(self, request):
+        return render(request, 'registration/reset-password.html')
+
+    def post(self, request):
+        email = request.POST['email']
+        if not validate_email(email):
+            messages.error(request, 'Please give a valid email !')
+            return render(request, 'registration/reset-password.html')
+        current_site = get_current_site(request)
+        user = User.objects.filter(email=email)
+        if user.exists():
+            email_contents = {
+                'user': user[0],
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user[0].pk)),
+                'token': PasswordResetTokenGenerator().make_token(user[0]),
+            }
+            link = reverse('accounts:set-new-password', kwargs={
+                'uidb64': email_contents['uid'], 'token': email_contents['token']})
+
+            reset_url = 'http://'+current_site.domain+link
+
+            email_body = 'Hi there,' \
+                ' Please use this link to reset your password\n' + reset_url
+
+            email_subject = 'Password reset Instruction'
+
+            email = EmailMessage(
+                email_subject, email_body,
+                'noreply@semycolon.com',
+                [email])
+
+            EmailThread(email).start()
+            messages.success(request, 'We have sent a email to reset password')
+            return render(request, 'registration/reset-password.html')
+        else:
+            messages.error(
+                request, 'No user exists with this email, Please provide a valid email !')
+            return render(request, 'registration/reset-password.html')
+
+
+class CompletePasswordReset(View):
+    def get(self, request, uidb64, token):
+        context = {
+            'uidb64': uidb64,
+            'token': token
+        }
+        return render(request, 'registration/set-new-password.html', context)
+
+    def post(self, request, uidb64, token):
+        context = {
+            'uidb64': uidb64,
+            'token': token
+        }
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        if password != password2:
+            messages.error(request, 'Passwords doest not match !')
+            return render(request, 'registration/set-new-password.html', context)
+        if len(password) < 6:
+            messages.error(request, 'Password should be at least 6 characters')
+            return render(request, 'registration/set-new-password.html', context)
+        elif re.search('[0-9]', password) is None:
+            messages.error(
+                request, 'Your password must have at least 1 number')
+            return render(request, 'registration/set-new-password.html', context)
+        elif re.search('[A-Z]', password) is None:
+            messages.error(
+                request, 'Your password must have at least 1 uppercase letter')
+            return render(request, 'registration/set-new-password.html', context)
+        elif not any(c in specialCharacters for c in password):
+            messages.error(
+                request, 'Your password must have at least 1 special character ($, #, @, !, *)')
+            return render(request, 'registration/set-new-password.html', context)
+
+        try:
+            print('afid')
+            user_id = force_str(urlsafe_base64_decode(uidb64))
+            print(user_id)
+            user = User.objects.get(pk=user_id)
+            user.set_password = password
+            print(user.password)
+            user.save()
+            messages.success(request, 'Password reset successful')
+            return redirect('login')
+
+        except Exception as identifier:
+            import pdb
+            pdb.set_trace()
+            messages.info(request, 'something went wrong, try again')
+            return render(request, 'registration/set-new-password.html', context)

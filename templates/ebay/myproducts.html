@@ -3,12 +3,6 @@
 
 {% block content %}
 <style>
-  .card-img-top {
-          width: 100%;
-          height: 12vw;
-          object-fit: contain;
-          display : flex;
-        }
   .searchbox{
     position: absolute;
     padding : 5px;
@@ -32,9 +26,8 @@
 }
 }
 </style>
-<div>
 
-<form class="w-full max-w-sm" method="GET" action="{% url 'ebay:home' %}">
+<form class="w-full max-w-sm" method="GET" action="{% url 'ebay:myproduct' %}">
   <div class="container flex mx-auto">
     <div class="flex fixed border-2 rounded">
             <svg class="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
@@ -50,53 +43,57 @@
     </div>
 </div>
 </form>
+<div class="p-5 h-screen bg-gray-200">
+    <h1 class = "text-xl mb-2 text-center font-bold py-4 position-center"> Product List</h1>
+    {% if messages %}
+    {% for message in messages %}
+    <div{% if message.tags %} class="bg-green-300 text-white-400 px-2 py-2 border-0 shadow-xl flex rounded justify-between items-center-{{ message.tags }}"{% endif %}>
+        {{ message }}
+        <strong class="text-xl align-center cursor-pointer alert-del"
+        >&times;</strong>
+    </div>
+    {% endfor %}
+{% endif %}
+<script>
+var alert_del = document.querySelectorAll('.alert-del');
+alert_del.forEach((x) =>
+  x.addEventListener('click', function () {
+    x.parentElement.classList.add('hidden');
+  })
+);
+</script>
 
+    <div class="overflow-auto rounded-xl shadow">
+    {% if products %}
+    <table class="table-fixed w-full md:table-fixed">
+      <thead class="bg-gray-400 border-b-2 border-gray-200">
+		  <tr>
+			<th class="p-3 text-sm font-semibold tracking-wide text-center">Product Name</th>
+			<th class="p-3 text-sm font-semibold tracking-wide text-center">Description</th>
+			<th class="p-3 text-sm font-semibold tracking-wide text-center">Minimum Bid</th>
+			<th class="p-3 text-sm font-semibold tracking-wide text-center">End Data</th>
+			<th class="p-3 text-sm font-semibold tracking-wide text-center">Winner</th>
+		  </tr>
+		 </thead>
+			{% for Product in page_obj %}
+		  <tr>
+			<td class="bg-gray-300 border-2 text-center">{{Product.pname}}</td>
+			<td class="bg-gray-300 border-2 text-justify">{{Product.p_des}}</td>
+			<td class="bg-gray-300 border-2 text-center">{{Product.min_bid}}</td>		
+			<td class="bg-gray-300 border-2 text-center">{{Product.endate}}</td>
+			<td class="bg-gray-300 border-2 text-center">{{Product.winner}}</td>
+      <td class="py-2"><a href= "{% url 'ebay:update' pid=Product.p_id %}" class = "bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline">Update</a><a href= " {% url 'ebay:delete' pid=Product.p_id %}" class = "bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline">Delete</a>	
+		  </tr>
+		  {% endfor %}
+	  </table>
 
+    {% else %}
+    <h1 class="text-gray-500 text-xl p-4 md:p-6">
+      You don't have any products
+   </h1>
+    {% endif %}
 
-    <div class="container my-12 mx-auto px-4 md:px-12">
-      <div class="flex flex-wrap -mx-1 lg:-mx-4">
-{% if products %}
-        <!-- Column -->
-        {% for Product in page_obj %}
-        <div class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
-          <!-- Article -->
-          <article class="overflow-hidden rounded-lg shadow-lg">
-            <a href="{% url 'ebay:productinfo' pid=Product.p_id %}">
-              <img
-                alt="Placeholder"
-                class="card-img-top"
-                src="{{Product.p_photo.url}}"
-              />
-            </a>
-
-            <header
-              class="flex items-center justify-between leading-tight p-2 md:p-4"
-            >
-              <h1 class="text-lg">
-                  {{Product.pname}}
-              </h1>
-
-            </header>
-
-            <footer
-              class="flex items-center justify-between leading-none p-2 md:p-4"
-            >
-
-                <p class="ml-2 text-sm">Base price : <b>{{Product.min_bid}}</b></p>
-
-            </footer>
-          </article>
-        </div>
-               {% endfor %}
-      {% else %}
-
-              <h1 class="text-gray-500 text-xl  p-4 md:p-6">
-                 No products
-              </h1>
-
-               {% endif %}
-      </div>
-      <div class="">
+      <div>
         <b>Showing Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </b>
       </div>
       
@@ -111,17 +108,9 @@
           <a class="flex-shrink-0 bg-white-500 hover:bg-teal-300 border-teal-500 hover:border-teal-500 text-sm border-2 text-black py-1 px-2 rounded" href="?{% if query %}search={{query}}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
           <a class="flex-shrink-0 bg-white-500 hover:bg-teal-300 border-teal-500 hover:border-teal-500 text-sm border-2 text-black py-1 px-2 rounded" href="?{% if query %}search={{query}}&{% endif %}page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages}} &raquo;</a></li>
         {% endif %}
-  
-  
-        </ul>
-
-               </div>
-    </div>
-
-
+	  </ul>
+  </div>
 </div>
-
-
 {% endblock %}
   </body>
 </html>

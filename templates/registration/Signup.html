@@ -104,13 +104,6 @@
               want to login ?
             </a>
             {% include 'partials/_messages.html' %}
-            {% comment %} {% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %} {% endcomment %}
 <br>
             <button
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -126,5 +119,7 @@
         <br />
       </div>
     </div>
+
+    
   </body>
 </html>
