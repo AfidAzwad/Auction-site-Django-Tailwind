@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
@@ -52,7 +52,6 @@
 </form>
 
 
-
     <div class="container my-12 mx-auto px-4 md:px-12">
       <div class="flex flex-wrap -mx-1 lg:-mx-4">
 {% if products %}
@@ -72,19 +71,22 @@
             <header
               class="flex items-center justify-between leading-tight p-2 md:p-4"
             >
-              <h1 class="text-lg">
+              <h1 class="text-md font-semibold">
                   {{Product.pname}}
               </h1>
-
+              <p class="flex items-center justify-between leading-none p-2 text-lg font-semibold text-red-800">
+                {{Product.min_bid}}
+              </p>
             </header>
-
+  
+            <hr>
             <footer
-              class="flex items-center justify-between leading-none p-2 md:p-4"
-            >
+            class="flex items-center justify-between text-sm leading-none p-2"
+          >
+              <p class="ml-2 text-sm">{{Product.created_at}}</p>
+              <a class="bg-purple-600 p-1 font-semibold text-md text-white rounded"  href="{% url 'ebay:productinfo' pid=Product.p_id %}" type="button"/>Details</a> 
+          </footer>
 
-                <p class="ml-2 text-sm">Base price : <b>{{Product.min_bid}}</b></p>
-
-            </footer>
           </article>
         </div>
                {% endfor %}

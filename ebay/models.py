@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 # class CUSTOMER(models.Model):
 #     c_id = models.AutoField(primary_key=True)
 #     cname = models.CharField(max_length=50)
@@ -9,7 +10,9 @@ from django.contrib.auth.models import User
 #     def __str__(self):
 #         return str(self.c_id) + " " + self.c_email
 
-
+class Category(models.Model):
+    catgname = models.TextField()
+    
 class PRODUCTS(models.Model):
     p_id = models.AutoField(primary_key=True)
     pname = models.CharField(max_length=50)
@@ -17,7 +20,8 @@ class PRODUCTS(models.Model):
     p_photo = models.ImageField(upload_to='images/')
     endate = models.DateField()
     min_bid = models.CharField(max_length=20)
-    owner = models.ForeignKey(to=User, db_column="owner", on_delete=models.CASCADE)
+    owner = models.ForeignKey(to=User, db_column="owner", on_delete=models.CASCADE, default=True, null=False)
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
     winner = models.CharField(max_length=50, blank=True)
 
     @staticmethod
@@ -30,14 +34,14 @@ class PRODUCTS(models.Model):
 
 class BIDS(models.Model):
     serial = models.AutoField(primary_key=True)
-    product = models.ForeignKey(PRODUCTS, db_column="product", on_delete=models.CASCADE)
+    product = models.ForeignKey(PRODUCTS, db_column="product", on_delete=models.CASCADE, default=True, null=False)
     # p_name = models.ForeignKey(PRODUCTS, on_delete=models.CASCADE)
-    bider = models.ForeignKey(to=User,db_column="bider", on_delete=models.CASCADE)
+    bider = models.ForeignKey(to=User,db_column="bider", on_delete=models.CASCADE, default=True, null=False)
     price = models.CharField(max_length=20)
 
     @staticmethod
     def get_all_products():
-        return BIDS.objects.all().order_by('-Serial')
+        return BIDS.objects.all().order_by('-serial')
 
     def __str__(self):
         return str(self.serial) + " " + self.bider

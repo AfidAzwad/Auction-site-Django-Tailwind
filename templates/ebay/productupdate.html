@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
@@ -33,7 +33,23 @@
   >
       {% csrf_token %}
       <h4 class="header">Update Auction details</h4>
-
+      {% if messages %}
+      {% for message in messages %}
+      <div{% if message.tags %} class="bg-red-200 text-red-700 px-2 py-2 border-0 shadow-xl flex rounded justify-between align-center-{{ message.tags }}"{% endif %}>
+          {{ message }}
+          <strong class="text-xl align-center cursor-pointer alert-del"
+          >&times;</strong>
+      </div>
+      {% endfor %}
+  {% endif %}
+  <script>
+  var alert_del = document.querySelectorAll('.alert-del');
+  alert_del.forEach((x) =>
+    x.addEventListener('click', function () {
+      x.parentElement.classList.add('hidden');
+    })
+  );
+  </script>
       <div align="center">
         <div class="col-xs-offset-3 col-xs-6 col-md-offset-4 col-md-4">
           {{ productinfo.as_p }}

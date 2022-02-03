@@ -236,12 +236,9 @@ class CompletePasswordReset(View):
             return render(request, 'registration/set-new-password.html', context)
 
         try:
-            print('afid')
             user_id = force_str(urlsafe_base64_decode(uidb64))
-            print(user_id)
             user = User.objects.get(pk=user_id)
-            user.set_password = password
-            print(user.password)
+            user.set_password(password)
             user.save()
             messages.success(request, 'Password reset successful')
             return redirect('login')
