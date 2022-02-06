@@ -11,12 +11,18 @@ from datetime import datetime
 #         return str(self.c_id) + " " + self.c_email
 
 class Category(models.Model):
-    catgname = models.TextField()
+    c_id = models.AutoField(primary_key=True)
+    cname = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.cname
+    
     
 class PRODUCTS(models.Model):
     p_id = models.AutoField(primary_key=True)
     pname = models.CharField(max_length=50)
     p_des = models.TextField(max_length=250)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,default=True, null=False)
     p_photo = models.ImageField(upload_to='images/')
     endate = models.DateField()
     min_bid = models.CharField(max_length=20)

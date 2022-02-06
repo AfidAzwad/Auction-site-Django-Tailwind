@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import *
-# Register your models here.  
+# Register your models here.
 admin.site.register(BIDS)
 admin.site.register(PRODUCTS)
+admin.site.register(Category)

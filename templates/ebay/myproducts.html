@@ -36,8 +36,9 @@
           Search
         </button>
     </div>
-</div>
+  </div>
 </form>
+
 <div class="p-5">
     <h1 class = "text-xl mb-2 text-center font-bold py-4 position-center"> Product List</h1>
     {% if messages %}
@@ -66,6 +67,7 @@ alert_del.forEach((x) =>
 		  <tr>
 			<th class="p-3 text-sm font-semibold tracking-wide text-center">Product Name</th>
 			<th class="p-3 text-sm font-semibold tracking-wide text-center">Description</th>
+			<th class="p-3 text-sm font-semibold tracking-wide text-center">Category</th>
 			<th class="p-3 text-sm font-semibold tracking-wide text-center">Image</th>
 			<th class="p-3 text-sm font-semibold tracking-wide text-center">Minimum Bid</th>
 			<th class="p-3 text-sm font-semibold tracking-wide text-center">End Data</th>
@@ -76,6 +78,7 @@ alert_del.forEach((x) =>
 		  <tr>
 			<td class="bg-gray-300 text-center">{{Product.pname}}</td>
 			<td class="bg-gray-300 text-justify">{{Product.p_des}}</td>
+			<td class="bg-gray-300 text-center">{{Product.category.cname}}</td>
 			<td class="bg-gray-300">  <img class="h-16 w-16 mx-auto rounded-full" src="{{Product.p_photo.url}}" />
       </td>
 			<td class="bg-gray-300 text-center">{{Product.min_bid}}</td>		
@@ -108,7 +111,7 @@ alert_del.forEach((x) =>
 
     {% else %}
     <h1 class="text-gray-500 text-xl p-4 md:p-6">
-      You don't have any products
+      No products to show
    </h1>
     {% endif %}
     
