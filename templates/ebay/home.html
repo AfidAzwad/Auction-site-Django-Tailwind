@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
 {% block content %}
+
 <style>
   .card-img-top {
           width: 100%;
@@ -9,13 +11,6 @@
           object-fit: contain;
           display : flex;
         }
-  .searchbox{
-    position: absolute;
-    padding : 5px;
-    right: 0px;
-    width: 300px;
-    z-index: -1;
-  }
   @media screen and (max-width: 768px) {
  .card-img-top {
         height: 55vw;
@@ -29,55 +24,27 @@
        justify-content: center;
        width: 98%;
        left: 2%;
-}
+}}
 }
 </style>
 
-<div class="flex justify-center py-1 px-6 bg-gray-100 border-none">
-      <form method="GET" action="{% url 'ebay:home' %}" class="w-full max-w-md">
-            <div class="relative flex items-center justify-between text-gray-400 focus-within:text-gray-600">
-                <svg class="w-5 h-5 absolute ml-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24">
-                      <path
-                          d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
-                      </path>
-                </svg>
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Search"
-                    autocomplete="off"
-                    required = "True"
-                    class= "w-full pr-3 pl-10 py-1 font-semibold placeholder-gray-500 text-black rounded-2xl border-none ring-2 ring-gray-300 focus:ring-gray-500 focus:ring-2" />
-                  <button type="submit" class="flex px-3 py-2 font-lg text-center border-none rounded-3xl bg-yellow-400 hover:bg-yellow-500 text-white ">Search</button>
-
-            </div>
-      </form>
-      <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-                    
-      <div x-data="{ dropdownOpen: false }" class="relative pt-1 pl-1">
-            <button @click="dropdownOpen = true"  class="flex px-2 py-1 font-semibold border-none rounded text-gray-600 focus:ring-gray-500 focus:text-black " size="1">Categories<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div x-show="dropdownOpen" @click="dropdownOpen = false" class="fixed inset-0 h-full w-full z-10">
-                    
-            </div>
-            <div x-show="dropdownOpen" class="absolute w-48 bg-white rounded-md shadow-xl z-20">
-              {% if categories %}
-                  {% for categories in categories %}
-                       <a class="block px-4 py-2 text-left rounded hover:bg-teal-500 hover:text-white" href= {% url 'ebay:home' %}?category={{ categories.cname }}>{{ categories.cname }}</a>
-                  {% endfor %}
-              {% endif %}
-            </div>
-      </div>
+<div style="background-image: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('{% static 'images/a3.jpg' %}');
+background-size: cover; height:650px; padding-top: 12%; text-align: center;">
+    <div class="justify-center items-center">
+      <h1 class="text-4xl text-white mt-4">Welcome to the largest <br></h1>
+        <p class="text-5xl font-semibold text-white" >Auction Site</p>
+      <p class="text-2xl text-gray-500"><em> the safest marketplace platform</em></p>
+      <p class="font-semibold text-teal-500" style="font-family: cursive,Charcoal,sans-serif; font-size: 15px;">Bid and Own Your Dream</p>
+    </div>
 </div>
 
-    <div class="container my-12 mx-auto px-4 md:px-12">
-            <div class="flex flex-wrap -mx-1 lg:-mx-4">
+
+<div class="container my-12 mx-auto px-4 md:px-12">
+     <a class="text-2xl font-semibold text-gray-600" href="{% url 'ebay:allproduct' %}"><em>All Products&#8594;</em></a>
+           <div class="flex flex-wrap -mx-1 lg:-mx-4">
               {% if products %}
               <!-- Column -->
-                  {% for Product in page_obj %}
+                  {% for Product in products %}
                     <div class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
                 <!-- Article -->
                         <article class="overflow-hidden rounded-lg shadow-lg">
@@ -113,33 +80,19 @@
                           </footer>
 
                           </article>
-                        </div>
-                    {% endfor %}
-                    {% else %}
+                    </div>
+                  {% endfor %}
+                {% else %}
                         <h1 class="text-gray-500 text-xl  p-4 md:p-6">
                           No products
                         </h1>
-                    {% endif %}
-              </div>
-            <div class="">
-              <b>Showing Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </b>
-            </div>
-      
-            <ul class="pagination align-right float-right mr-auto">
-                  {% if page_obj.has_previous %}
-                  <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}>
-                    <a class="flex-shrink-0 bg-white-500 hover:bg-teal-300 border-teal-500 hover:border-teal-500 text-sm border-2 text-black py-1 px-2 rounded" href="?{% if query %}search={{query}}&{% endif %}page=1">&laquo; 1</a>
-                    <a class="flex-shrink-0 bg-white-500 hover:bg-teal-300 border-teal-500 hover:border-teal-500 text-sm border-2 text-black py-1 px-2 rounded" href="?{% if query %}search={{query}}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
-                  {% endif %}
-            
-                  {% if page_obj.has_next %}
-                    <a class="flex-shrink-0 bg-white-500 hover:bg-teal-300 border-teal-500 hover:border-teal-500 text-sm border-2 text-black py-1 px-2 rounded" href="?{% if query %}search={{query}}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
-                    <a class="flex-shrink-0 bg-white-500 hover:bg-teal-300 border-teal-500 hover:border-teal-500 text-sm border-2 text-black py-1 px-2 rounded" href="?{% if query %}search={{query}}&{% endif %}page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages}} &raquo;</a></li>
-                  {% endif %}
-              </ul>
-    </div>
-  </div>
+              {% endif %}
+          </div>
+     <a class="absolute right-0 mr-8 text-2xl font-semibold text-gray-600" href="{% url 'ebay:allproduct' %}"><em>All Products&#8594;</em></a>
 </div>
+
+
+{% include 'footer.html' %}
 {% endblock %}
   </body>
 </html>

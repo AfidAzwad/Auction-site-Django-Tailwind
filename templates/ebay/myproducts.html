@@ -3,100 +3,92 @@
 
 {% block content %}
 <style>
-  .searchbox{
-    position: absolute;
-    padding : 5px;
-    right: 0px;
-    width: 300px;
-    z-index: -1;
+.mr-12 {
+  margin-right: 0rem;
   }
-@media screen and (max-width: 430px)
-{
-.searchbox{
-       position: absolute;
-       items: center;
-       justify-content: center;
-       width: 98%;
-       left: 2%;
-}
 }
 </style>
 
-<form class="w-full max-w-sm" method="GET" action="{% url 'ebay:myproduct' %}">
-  <div class="container flex mx-auto">
-    <div class="flex fixed border-2 rounded">
-            <svg class="w-6 h-6 text-gray-600" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24">
-                <path
-                    d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
-                </path>
-            </svg>
-        <input name="search" id="query" type="text" class="px-4 py-2 w-80" placeholder="search...">
-        <button class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded" type="submit">
-          Search
-        </button>
-    </div>
-  </div>
-</form>
+<div class="flex fixed right-0 mr-12 py-1 px-6 bg-gray-50 border-none">
+  <form class="w-full max-w-sm" method="GET" action="{% url 'ebay:mybids' %}">
+    <div class="container flex mx-auto">
+      <div class="relative flex items-center justify-between text-gray-400 focus-within:text-gray-600" }>
+        <svg class="w-5 h-5 absolute ml-3 pointer-events-none" xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24">
+              <path
+                  d="M16.32 14.9l5.39 5.4a1 1 0 0 1-1.42 1.4l-5.38-5.38a8 8 0 1 1 1.41-1.41zM10 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
+              </path>
+        </svg>
+          <input name="search" id="query" type="text" class="pr-3 pl-10 py-2 w-100" placeholder="search by name or serial..">
+          <button class="flex-shrink-0 bg-teal-400 hover:bg-teal-700 font-semibold text-sm border-4 text-black hover:text-white py-1 px-2 rounded" type="submit">
+            Search
+          </button>
+       </div>
+      </div>
+    </form>
+</div>
 
-<div class="p-5">
-    <h1 class = "text-xl mb-2 text-center font-bold py-4 position-center"> Product List</h1>
-    {% if messages %}
-    {% for message in messages %}
-    <div{% if message.tags %} class="bg-green-300 text-white-400 px-2 py-2 border-0 shadow-xl flex rounded justify-between items-center-{{ message.tags }}"{% endif %}>
-        {{ message }}
-        <strong class="text-xl align-center cursor-pointer alert-del"
-        >&times;</strong>
-    </div>
-    {% endfor %}
-{% endif %}
-<script>
-var alert_del = document.querySelectorAll('.alert-del');
-alert_del.forEach((x) =>
-  x.addEventListener('click', function () {
-    x.parentElement.classList.add('hidden');
-  })
-);
-</script>
 
-    
+
+<div class="pt-5">
+    <h1 class = "text-xl mb-2 p-6 text-center font-bold position-center"> Product List</h1>
+
+            {% if messages %}
+                    {% for message in messages %}
+                        <div{% if message.tags %} class="bg-green-300 text-white-400 px-2 py-2 border-0 shadow-xl flex rounded justify-between items-center-{{ message.tags }}"{% endif %}>
+                            {{ message }}
+                            <strong class="text-xl align-center cursor-pointer alert-del"
+                            >&times;</strong>
+                        </div>
+                    {% endfor %}
+            {% endif %}
+                    <script>
+                          var alert_del = document.querySelectorAll('.alert-del');
+                          alert_del.forEach((x) =>
+                            x.addEventListener('click', function () {
+                              x.parentElement.classList.add('hidden');
+                            })
+                          );
+                    </script>
     {% if products %}
     <div class="overflow-auto rounded-xl">
-    <table class="table-fixed w-full">
-      <thead class="bg-gray-400 b-2 b-gray-200">
-		  <tr>
-			<th class="p-3 text-sm font-semibold tracking-wide text-center">Product Name</th>
-			<th class="p-3 text-sm font-semibold tracking-wide text-center">Description</th>
-			<th class="p-3 text-sm font-semibold tracking-wide text-center">Category</th>
-			<th class="p-3 text-sm font-semibold tracking-wide text-center">Image</th>
-			<th class="p-3 text-sm font-semibold tracking-wide text-center">Minimum Bid</th>
-			<th class="p-3 text-sm font-semibold tracking-wide text-center">End Data</th>
-			<th class="p-3 text-sm font-semibold tracking-wide text-center">Winner</th>
-		  </tr>
-		 </thead>
-			{% for Product in page_obj %}
-		  <tr>
-			<td class="bg-gray-300 text-center">{{Product.pname}}</td>
-			<td class="bg-gray-300 text-justify">{{Product.p_des}}</td>
-			<td class="bg-gray-300 text-center">{{Product.category.cname}}</td>
-			<td class="bg-gray-300">  <img class="h-16 w-16 mx-auto rounded-full" src="{{Product.p_photo.url}}" />
-      </td>
-			<td class="bg-gray-300 text-center">{{Product.min_bid}}</td>		
-			<td class="bg-gray-300 text-center">{{Product.endate}}</td>
-			<td class="bg-gray-300 text-center">{{Product.winner}}</td>
-      <td class="py-2 border-0"><a href= "{% url 'ebay:update' pid=Product.p_id %}" class = "bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline">Update</a><a href= " {% url 'ebay:delete' pid=Product.p_id %}" class = "bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline">Delete</a>	
-		  </td>
-      </tr>
-		  {% endfor %}
-	  </table>
-  </div>
+        <table class="table-auto w-full">
+            <thead class="bg-yellow-400">
+                <tr>
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">Product Name</th>
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">Description</th>
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">Category</th>
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">Image</th>
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">Minimum Bid</th>
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">End Data</th>
+                  <th class="p-3 text-sm font-semibold tracking-wide text-center">Winner</th>
+                </tr>
+            </thead>
+            {% for Product in page_obj %}
+                <tr class="bg-gray-100 border-b-2 hover:bg-gray-300">
+                    <td class="text-center">{{Product.pname}}</td>
+                    <td class="text-justify">{{Product.p_des}}</td>
+                    <td class="text-center">{{Product.category.cname}}</td>
+                    <td>  <img class="h-16 w-16 mx-auto rounded-full" src="{{Product.p_photo.url}}" /></td>
+                    <td class="text-center">{{Product.min_bid}}</td>		
+                    <td class="text-center">{{Product.endate}}</td>
+                    <td class="text-center">{{Product.winner}}</td>
+                    {% if win %}
+                    {% else %}
+                    <td class="py-2 border-b-0 bg-white"><a href= "{% url 'ebay:update' pid=Product.p_id %}" class = "bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline">Update</a><a href= " {% url 'ebay:delete' pid=Product.p_id %}" class = "bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline">Delete</a>	
+                    </td>
+                    {%endif%}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 
   
-        <b>Showing Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </b>
+        <b class="ml-6">Showing Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </b>
     
       
-      <ul class="pagination float-right mr-auto">
+      <ul class="pagination float-right mr-12">
         {% if page_obj.has_previous %}
         <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}>
           <a class="flex-shrink-0 bg-white-500 hover:bg-teal-300 border-teal-500 hover:border-teal-500 text-sm border-2 text-black py-1 px-2 rounded" href="?{% if query %}search={{query}}&{% endif %}page=1">&laquo; 1</a>
@@ -115,7 +107,6 @@ alert_del.forEach((x) =>
    </h1>
     {% endif %}
     
-
 {% endblock %}
   </body>
 </html>

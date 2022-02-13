@@ -24,7 +24,7 @@
 <div class="main">
   <div class="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-4">
        <div>
-          <img class=" h-30 w-25 img-fluid mx-auto" src="{{products.p_photo.url}}" />
+          <img class=" h-23 w-25 img-fluid mx-auto" src="{{products.p_photo.url}}" />
        </div>
        <div>
           <h2 class="text-3xl font-medium uppercase pt-6 mb-2">{{products.pname}} </h2>
@@ -88,7 +88,7 @@
             </form>
           </div>
         <div class="pt-6">
-          <p class="text-xl bg-blue-200 border-2 border-blue-300 text-center" ><b>BID Information</b></p>
+          <p class="text-xl bg-yellow-400 border-2 border-blue-200 text-center" ><b>BID Information</b></p>
           {% if bids %}
             {% for bid in bids %}
               <div>

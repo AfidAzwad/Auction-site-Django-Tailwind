@@ -1,3 +1,4 @@
+from django.db.models import Q
 from datetime import date
 import pandas as pd
 from django.shortcuts import render, redirect
@@ -16,23 +17,30 @@ from django.contrib.auth.decorators import login_required
 
 
 def home(request):
+    category = request.GET.get('category')
+    categories = Category.objects.all()
+
+    if category != None:
+        items = PRODUCTS.objects.filter(category__cname=category)
+    else:
+        items = PRODUCTS.get_all_products()[:6]
+
+    diction = {'title': "Homepage", 'products': items,
+               'categories': categories, }
+    return render(request, 'ebay/home.html', diction)
+
+
+def allproduct(request):
     query = ""
     diction = {}
     category = request.GET.get('category')
     categories = Category.objects.all()
-    
+
     if category != None:
         items = PRODUCTS.objects.filter(category__cname=category)
     elif 'search' in request.GET:
         query = request.GET.get('search')
-        diction['query'] = str(query).strip()
         items = PRODUCTS.objects.filter(pname__icontains=query)
-        paginator = Paginator(items, 6)
-        page_number = request.GET.get('page')
-        page_obj = Paginator.get_page(paginator, page_number)
-        diction = {'title': "Homepage",
-                   'products': items, 'page_obj': page_obj}
-        return render(request, 'ebay/home.html', diction)
     else:
         items = PRODUCTS.get_all_products()
 
@@ -40,8 +48,9 @@ def home(request):
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
 
-    diction = {'title': "Homepage", 'products': items, 'categories' : categories, 'page_obj': page_obj}
-    return render(request, 'ebay/home.html', diction)
+    diction = {'title': "All Products", 'products': items,
+               'categories': categories, 'page_obj': page_obj, 'query': query}
+    return render(request, 'ebay/allproduct.html', diction)
 
 
 @login_required(login_url='/account/login')
@@ -53,7 +62,7 @@ def addproducts(request):
         enddate = pd.to_datetime(enddate).date()
         form = forms.addproductForm(request.POST, request.FILES)
         if form.is_valid():
-            if endate <= today:
+            if enddate <= today:
                 messages.error(request, 'Auction End-Date is not valid !')
                 return redirect('ebay:addproduct')
             else:
@@ -71,48 +80,38 @@ def addproducts(request):
 @login_required(login_url='/account/login')
 def myproduct(request):
     query = ""
-    diction = {}
-
     if 'search' in request.GET:
         query = request.GET.get('search')
-        diction['query'] = str(query).strip()
         items = PRODUCTS.objects.filter(
-            pname__icontains=query) and PRODUCTS.objects.filter(owner=request.user)
-        paginator = Paginator(items, 2)
-        page_number = request.GET.get('page')
-        page_obj = Paginator.get_page(paginator, page_number)
-        diction = {'title': "My Peoducts",
-                   'products': items, 'page_obj': page_obj}
-        return render(request, 'ebay/myproducts.html', diction)
+            Q(pname__icontains=query), Q(owner=request.user.id))
     else:
         items = PRODUCTS.objects.filter(owner=request.user)
 
-    paginator = Paginator(items, 2)
+    paginator = Paginator(items, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
 
-    diction = {'title': "My products", 'products': items, 'page_obj': page_obj}
+    diction = {'title': "My products", 'products': items,
+               'page_obj': page_obj, 'query': query}
     return render(request, 'ebay/myproducts.html', context=diction)
-
-
-
-
-
-def bidder(request):
-    bidder = BIDS.get_all_products()
-    diction = {'title': "Bidder Information",
-               'bidders': bidder}
-    return render(request, 'ebay/bidderinfo.html', context=diction)
-
-
-
 
 
 @login_required(login_url='/account/login')
 def update(request, pid):
+    today = date.today()
+    p = PRODUCTS.objects.get(p_id=pid)
+
+    if BIDS.objects.filter(Q(product=pid), Q(product__endate=today)).exists():
+        highest = BIDS.objects.filter(
+            product=pid).order_by('-price').first()
+        PRODUCTS.objects.filter(p_id=pid).update(
+            winner=highest.bider.email)
+        messages.success(request, 'Winner is already found !')
+        return redirect('ebay:myproduct')
+
     productinfo = PRODUCTS.objects.get(p_id=pid)
     form = forms.addproductForm(instance=productinfo)
-    today = date.today()
+
     if request.method == "POST":
         enddate = request.POST['endate']
         enddate = pd.to_datetime(enddate).date()
@@ -122,7 +121,7 @@ def update(request, pid):
         if form.is_valid():
             if enddate <= today:
                 messages.error(request, 'Auction End-Date is not valid !')
-                diction = {'title': "Product Update", 'productinfo': form}
+                diction = {'title': "Product Update", 'productinfo': form, }
                 return render(request, 'ebay/productupdate.html', context=diction)
             form.save(commit=True)
             messages.success(request, 'Product Updated Successfully !')
@@ -132,30 +131,70 @@ def update(request, pid):
     return render(request, 'ebay/productupdate.html', context=diction)
 
 
-
-
 @login_required(login_url='/account/login')
 def deletion(request, pid):
+    today = date.today()
+    if BIDS.objects.filter(Q(product=pid), Q(product__endate=today)).exists():
+        highest = BIDS.objects.filter(
+            product=pid).order_by('-price').first()
+        PRODUCTS.objects.filter(p_id=pid).update(
+            winner=highest.bider.email)
+        messages.success(request, 'Winner is already found !')
+        return redirect('ebay:myproduct')
+    
     PRODUCTS.objects.get(p_id=pid).delete()
     messages.error(request, 'Product Deleted Successfully !')
     return redirect('ebay:myproduct')
+
+
+@login_required(login_url='/account/login')
+def mybids(request):
+    query = ""
+    diction = {}
+    today = date.today()
+    if 'search' in request.GET:
+        query = request.GET.get('search')
+        bids = BIDS.objects.filter(
+            Q(product__pname__icontains=query) | Q(serial__icontains=query), Q(bider=request.user.id))
+    else:
+        bids = BIDS.objects.filter(bider=request.user.id)
+
+    paginator = Paginator(bids, 6)
+    page_number = request.GET.get('page')
+    page_obj = Paginator.get_page(paginator, page_number)
+
+    diction = {'title': "My bids", 'bids': bids,
+               'page_obj': page_obj, 'today': today, 'query': query}
+    return render(request, 'ebay/mybids.html', context=diction)
+
+
+@login_required(login_url='/account/login')
+def biddelete(request, serial):
+    BIDS.objects.get(serial=serial).delete()
+    messages.error(request, 'Bid Deleted Successfully !')
+    return redirect('ebay:mybids')
 
 
 def productinfo(request, pid):
     win = False
     today = date.today()
     p = PRODUCTS.objects.get(p_id=pid)
-    if BIDS.objects.filter(product=pid).exists():
-        if PRODUCTS.objects.filter(p_id=pid, endate=today).exists():
-            highest = BIDS.objects.filter(
-                product=pid).order_by('-price').first()
-            PRODUCTS.objects.filter(p_id=pid).update(
-                winner=highest.bider.email)
-            win = True
+    if BIDS.objects.filter(Q(product=pid), Q(product__endate=today)).exists():
+        highest = BIDS.objects.filter(
+            product=pid).order_by('-price').first()
+        PRODUCTS.objects.filter(p_id=pid).update(
+            winner=highest.bider.email)
+        win = True
+
+    if PRODUCTS.objects.filter(Q(p_id=pid), Q(endate=today)).exists() and not BIDS.objects.filter(product=pid).exists():
+        PRODUCTS.objects.filter(p_id=pid).update(
+            winner="No bid")
+
     bider = BIDS.objects.filter(product=pid).order_by('-serial')
-    ownercheck = PRODUCTS.objects.filter(
-            owner=request.user, p_id=p.p_id).exists()
+
     if request.user.is_authenticated:
+        ownercheck = PRODUCTS.objects.filter(
+            owner=request.user, p_id=p.p_id).exists()
         if request.method == "POST":
             price = request.POST["bidprice"]
             if price < p.min_bid:
@@ -170,8 +209,12 @@ def productinfo(request, pid):
                 bid.save()
                 messages.success(request, 'Bid Submitted!!!')
             diction = {'title': "Product Info", 'products': p,
-                       'bids': bider, 'win': win, 'today' : today}
+                       'bids': bider, 'win': win, 'today': today}
             return render(request, 'ebay/productinfo.html', context=diction)
-    diction = {'title': "Product Info", 'ownercheck': ownercheck,
-               'products': p, 'bids':bider, 'win': win, 'today' : today}
+        diction = {'title': "Product Info", 'products': p, 'bids': bider,
+                   'win': win, 'ownercheck': ownercheck, 'today': today}
+        return render(request, 'ebay/productinfo.html', context=diction)
+
+    diction = {'title': "Product Info", 'products': p,
+               'bids': bider, 'win': win, 'today': today}
     return render(request, 'ebay/productinfo.html', context=diction)

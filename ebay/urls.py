@@ -8,14 +8,15 @@ app_name = "ebay"
 
 urlpatterns = [
     path('', views.home, name="home"),
-    #path('product/<int:pid>/', views.home, name="product"),
-    path('bidders/', views.bidder, name="bidder"),
+    path('allproduct/', views.allproduct, name="allproduct"),
     path('addproduct/', views.addproducts, name="addproduct"),
     path('myproduct/', views.myproduct, name="myproduct"),
-    # path('myproduct/', views.myproduct, name="myproduct"),
     path('update/<int:pid>/', views.update, name="update"),
     path('<int:pid>/', views.deletion, name="delete"),
     path('productinfo/<int:pid>/', views.productinfo, name="productinfo"),
+    path('mybids/', views.mybids, name="mybids"),
+    path('bid/<int:serial>/', views.biddelete, name="biddelete"),
+
 ]
 
 if settings.DEBUG:

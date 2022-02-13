@@ -19,8 +19,8 @@
   }
 </style>
 
-    <div class="main">
-      <div class="w-full max-w-lg">
+<div class="main">
+    <div class="w-full max-w-lg">
           <form
             method="POST"
             action="{% url 'ebay:addproduct' %}"
@@ -89,24 +89,20 @@
                 {{ addproductForm.min_bid }}     </label>
               </div>
   
-    <div class="flex items-center justify-between">
-      
-<br>
-      <button
-        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
-        type="submit"
-      >
-        Add
-      </button>
-    </form>
-    </div>
-
-  <p class="text-center text-gray-700 text-xs">
-    &copy;2021 AMA Soft All rights reserved.
-  </p>
-  <br />
+          <div class="flex items-center justify-between">
+              <br>  
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Add
+              </button>
+            </div>
+          </form>
+     <br />
+  </div>
 </div>
-</div>
+{% include 'footer.html' %}
 
     {% endblock %}
   </body>
