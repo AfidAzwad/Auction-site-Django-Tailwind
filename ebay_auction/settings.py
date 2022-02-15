@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from django.contrib import messages
+import cloudinary_storage
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
@@ -28,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'ebay',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -110,8 +113,16 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'azwad22',
+    'API_KEY': '498234491913757',
+    'API_SECRET': '-EGbF85sXS8J_Nyizs_ogUBhNHs'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
