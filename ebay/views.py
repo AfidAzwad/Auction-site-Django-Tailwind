@@ -16,7 +16,27 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
 
+def productstatus():
+    Products = PRODUCTS.objects.all()
+    ID = Products.values_list('p_id', flat=True)
+    today = date.today()
+
+    for pid in ID:
+        p = PRODUCTS.objects.get(p_id=pid)
+        if BIDS.objects.filter(Q(product=pid), Q(product__endate__lte=today)).exists():
+            highest = BIDS.objects.filter(
+                product=pid).order_by('-price').first()
+            PRODUCTS.objects.filter(p_id=pid).update(
+                winner=highest.bider.email)
+            win = True
+
+        if PRODUCTS.objects.filter(Q(p_id=pid), Q(endate__lte=today)).exists() and not BIDS.objects.filter(product=pid).exists():
+            PRODUCTS.objects.filter(p_id=pid).update(
+                winner="No bid")
+
+
 def home(request):
+    productstatus()
     category = request.GET.get('category')
     categories = Category.objects.all()
 
@@ -80,12 +100,13 @@ def addproducts(request):
 @login_required(login_url='/account/login')
 def myproduct(request):
     query = ""
+    productstatus()
     if 'search' in request.GET:
         query = request.GET.get('search')
         items = PRODUCTS.objects.filter(
             Q(pname__icontains=query), Q(owner=request.user.id))
     else:
-        items = PRODUCTS.objects.filter(owner=request.user)
+        items = PRODUCTS.objects.filter(owner=request.user).order_by('-p_id')
 
     paginator = Paginator(items, 6)
     page_number = request.GET.get('page')
@@ -141,7 +162,7 @@ def deletion(request, pid):
             winner=highest.bider.email)
         messages.success(request, 'Winner is already found !')
         return redirect('ebay:myproduct')
-    
+
     PRODUCTS.objects.get(p_id=pid).delete()
     messages.error(request, 'Product Deleted Successfully !')
     return redirect('ebay:myproduct')
@@ -149,6 +170,7 @@ def deletion(request, pid):
 
 @login_required(login_url='/account/login')
 def mybids(request):
+    productstatus()
     query = ""
     diction = {}
     today = date.today()
@@ -157,7 +179,7 @@ def mybids(request):
         bids = BIDS.objects.filter(
             Q(product__pname__icontains=query) | Q(serial__icontains=query), Q(bider=request.user.id))
     else:
-        bids = BIDS.objects.filter(bider=request.user.id)
+        bids = BIDS.objects.filter(bider=request.user.id).order_by('-serial')
 
     paginator = Paginator(bids, 6)
     page_number = request.GET.get('page')
@@ -179,14 +201,14 @@ def productinfo(request, pid):
     win = False
     today = date.today()
     p = PRODUCTS.objects.get(p_id=pid)
-    if BIDS.objects.filter(Q(product=pid), Q(product__endate=today)).exists():
+    if BIDS.objects.filter(Q(product=pid), Q(product__endate__lte=today)).exists():
         highest = BIDS.objects.filter(
             product=pid).order_by('-price').first()
         PRODUCTS.objects.filter(p_id=pid).update(
             winner=highest.bider.email)
         win = True
 
-    if PRODUCTS.objects.filter(Q(p_id=pid), Q(endate=today)).exists() and not BIDS.objects.filter(product=pid).exists():
+    if PRODUCTS.objects.filter(Q(p_id=pid), Q(endate__lte=today)).exists() and not BIDS.objects.filter(product=pid).exists():
         PRODUCTS.objects.filter(p_id=pid).update(
             winner="No bid")
 
