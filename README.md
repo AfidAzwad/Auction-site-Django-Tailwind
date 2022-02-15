@@ -2,6 +2,12 @@
 
 Live at : https://auctionsite-az.herokuapp.com/
 
+A user information to login:
+   username : azwad
+   password : 12345678Ab@
+
+Admin can also login with provided system and can go to administration page. But superuser informations can't be provided.
+
 Tech used : Django, Tailwind CSS, Bootstrap, PostgreSql, Cloudinary, Heroku
 
 Feature used : 
