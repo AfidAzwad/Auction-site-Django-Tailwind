@@ -90,7 +90,6 @@ PySocks==1.7.1
 python-dateutil==2.8.2
 python-decouple==3.4
 pytz==2021.3
-pypiwin32==223
 pyzmq==22.3.0
 requests==2.26.0
 requests-toolbelt==0.9.1
