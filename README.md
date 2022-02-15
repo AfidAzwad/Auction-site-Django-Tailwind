@@ -1,5 +1,7 @@
 # Auction-site-Django-Tailwind
 
+Live at : https://auctionsite-az.herokuapp.com/
+
 Tech used : Django, Tailwind CSS, Bootstrap, PostgreSql, Cloudinary, Heroku
 
 Feature used : 
@@ -8,5 +10,3 @@ Feature used :
            3. Email Threading
            4. Django ORM(Object–relational mapping)
            5. Cloud Storage
-
-Live at : https://auctionsite-az.herokuapp.com/
