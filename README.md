@@ -10,7 +10,7 @@ Live at : https://auctionsite-az.herokuapp.com/
 
       Tech used : Django, Tailwind CSS, EmailJs, SweetAlertJs, PostgreSql, Cloudinary, Heroku
 
-      Feature used : 
+      Features used : 
                  1. User Authentication
                  2. Email Verification
                  3. Token Verification
