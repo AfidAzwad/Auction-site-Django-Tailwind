@@ -21,7 +21,9 @@ from .utils import token_generator
 from django.contrib import auth
 import threading
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-import re
+import requests
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 specialCharacters = ['$', '#', '@', '!', '*']
 
@@ -128,6 +130,7 @@ class LoginView(View):
             return redirect('login')
 
 
+@method_decorator(login_required, name='dispatch')
 class VerificationView(View):
     def get(self, request, uidb64, token):
         try:
@@ -158,6 +161,7 @@ class LogoutView(View):
         return redirect(reverse('/'))
 
 
+@method_decorator(login_required, name='dispatch')
 class RequestPasswordReset(View):
     def get(self, request):
         return render(request, 'registration/reset-password.html')
@@ -200,6 +204,7 @@ class RequestPasswordReset(View):
             return render(request, 'registration/reset-password.html')
 
 
+@method_decorator(login_required, name='dispatch')
 class CompletePasswordReset(View):
     def get(self, request, uidb64, token):
         context = {
