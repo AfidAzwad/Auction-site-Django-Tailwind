@@ -24,7 +24,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import requests
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-
+import re
 specialCharacters = ['$', '#', '@', '!', '*']
 
 
