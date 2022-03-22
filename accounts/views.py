@@ -160,7 +160,6 @@ class LogoutView(View):
         return redirect(reverse('/'))
 
 
-@method_decorator(login_required, name='dispatch')
 class RequestPasswordReset(View):
     def get(self, request):
         return render(request, 'registration/reset-password.html')
@@ -203,7 +202,6 @@ class RequestPasswordReset(View):
             return render(request, 'registration/reset-password.html')
 
 
-@method_decorator(login_required, name='dispatch')
 class CompletePasswordReset(View):
     def get(self, request, uidb64, token):
         context = {
