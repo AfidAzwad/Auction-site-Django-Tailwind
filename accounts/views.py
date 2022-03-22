@@ -130,7 +130,6 @@ class LoginView(View):
             return redirect('login')
 
 
-@method_decorator(login_required, name='dispatch')
 class VerificationView(View):
     def get(self, request, uidb64, token):
         try:
