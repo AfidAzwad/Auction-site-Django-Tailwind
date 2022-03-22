@@ -73,7 +73,7 @@ def allproduct(request):
     return render(request, 'ebay/allproduct.html', diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def addproducts(request):
     form = forms.addproductForm()
     today = date.today()
@@ -97,7 +97,7 @@ def addproducts(request):
     return render(request, 'ebay/addproduct.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def myproduct(request):
     query = ""
     productstatus()
@@ -117,7 +117,7 @@ def myproduct(request):
     return render(request, 'ebay/myproducts.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def update(request, pid):
     today = date.today()
     p = PRODUCTS.objects.get(p_id=pid)
@@ -152,7 +152,7 @@ def update(request, pid):
     return render(request, 'ebay/productupdate.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def deletion(request, pid):
     today = date.today()
     if BIDS.objects.filter(Q(product=pid), Q(product__endate=today)).exists():
@@ -168,7 +168,7 @@ def deletion(request, pid):
     return redirect('ebay:myproduct')
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def mybids(request):
     productstatus()
     query = ""
@@ -190,7 +190,7 @@ def mybids(request):
     return render(request, 'ebay/mybids.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def biddelete(request, serial):
     BIDS.objects.get(serial=serial).delete()
     messages.error(request, 'Bid Deleted Successfully !')
