@@ -16,7 +16,7 @@ class addproductForm(forms.ModelForm):
     endate = forms.DateField(widget=forms.DateInput(
         attrs={'class': 'shadow w-full py-2 px-3 bg-body rounded focus:outline-none focus:shadow-outline', 'type': 'date'}), label='')
     min_bid = forms.CharField(widget=forms.TextInput(
-        attrs={'class': 'shadow w-full py-2 px-3 bg-body rounded focus:outline-none focus:shadow-outline', 'value': "$"}), label='')
+        attrs={'class': 'shadow w-full py-2 px-3 bg-body rounded focus:outline-none focus:shadow-outline', 'placeholder': "$"}), label='')
 
     class Meta:
         model = models.PRODUCTS

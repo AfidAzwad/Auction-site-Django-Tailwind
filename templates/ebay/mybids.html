@@ -74,10 +74,10 @@
               <td class="text-justify">{{bids.product.p_des}}</td>
               <td class="text-center">{{bids.product.category.cname}}</td>
               <td>  <img class="h-16 w-16 mx-auto rounded-full" src="{{bids.product.p_photo.url}}" /></td>
-              <td class="text-center">{{bids.product.min_bid}}</td>		
+              <td class="text-center"> ${{bids.product.min_bid}}</td>		
               <td class="text-center">{{bids.product.endate}}</td>
               <td class="text-center">{{bids.product.owner.username}}</td>
-              <td class="text-center">{{bids.price}}</td>
+              <td class="text-center">${{bids.price}}</td>
               <td class="text-center">{{bids.product.winner}}</td>
               <td class="py-2 border-none bg-white">
                   {% if bids.product.endate <= today  %}

@@ -20,7 +20,7 @@
 </style>
 
 <div class="main">
-    <div class="w-full max-w-lg">
+    <div class="w-full">
           <form
             method="POST"
             action="{% url 'ebay:addproduct' %}"
@@ -49,54 +49,60 @@
                 );
                 </script>
 
-              <div class="mb-2">
-                <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
-                  Product Name
-          
-                {{ addproductForm.pname }}     </label>
-              </div>
+              <div class="grid grid-cols-2 gap-4 mx-5">           
+                    <div>
+                      <div class="mb-2">
+                        <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
+                          Product Name
+                  
+                        {{ addproductForm.pname }}     </label>
+                      </div>
+                      <div class="mb-2">
+                        <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
+                          Product Description
+                  
+                        {{ addproductForm.p_des }}     </label>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="mt-4 mb-4">
+                        <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
+                          Category
+                  
+                        {{ addproductForm.category }}     </label>
+                      </div>
+                    
+                 
+                      <div class="mb-4">
+                        <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
+                          Product Image
+                  
+                        {{ addproductForm.p_photo }}     </label>
+                      </div>
 
-              <div class="mb-2">
-                <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
-                  Product Description
-          
-                {{ addproductForm.p_des }}     </label>
-              </div>
-              <div class="mb-2">
-                <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
-                  Category
-          
-                {{ addproductForm.category }}     </label>
-              </div>
+                      <div class="mb-4">
+                        <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
+                          Auction End date
+                  
+                        {{ addproductForm.endate }}     </label>
+                      </div>
 
-              <div class="mb-2">
-                <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
-                  Product Image
+                      <div class="mb-4">
+                        <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
+                          Minimum Bid Price
+                        {{ addproductForm.min_bid }}     </label>
+                      </div>
           
-                {{ addproductForm.p_photo }}     </label>
-              </div>
-
-              <div class="mb-2">
-                <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
-                  Auction End date
-          
-                {{ addproductForm.endate }}     </label>
-              </div>
-
-              <div class="mb-2">
-                <label class="text-gray-700 text-sm font-bold mb-2" for="firstname">
-                  Minimum Bid Price
-                {{ addproductForm.min_bid }}     </label>
-              </div>
-  
-          <div class="flex items-center justify-between">
-              <br>  
-              <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit"
-              >
-                Add
-              </button>
+                      <div class="flex items-center justify-between">
+                        <br>  
+                        <button
+                          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline"
+                          type="submit"
+                        >
+                          Add
+                        </button>
+                      </div>
+                  </div>
             </div>
           </form>
      <br />
