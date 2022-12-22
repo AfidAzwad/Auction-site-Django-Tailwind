@@ -73,17 +73,21 @@ def allproduct(request):
     return render(request, 'ebay/allproduct.html', diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def addproducts(request):
     form = forms.addproductForm()
     today = date.today()
     if request.method == "POST":
         enddate = request.POST['endate']
+        price = int(request.POST['min_bid'])
         enddate = pd.to_datetime(enddate).date()
         form = forms.addproductForm(request.POST, request.FILES)
         if form.is_valid():
             if enddate <= today:
                 messages.error(request, 'Auction End-Date is not valid !')
+                return redirect('ebay:addproduct')
+            elif price < 0:
+                messages.error(request, 'Price cant be negative !')
                 return redirect('ebay:addproduct')
             else:
                 instance = form.save(commit=False)
@@ -97,7 +101,7 @@ def addproducts(request):
     return render(request, 'ebay/addproduct.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def myproduct(request):
     query = ""
     productstatus()
@@ -117,7 +121,7 @@ def myproduct(request):
     return render(request, 'ebay/myproducts.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def update(request, pid):
     today = date.today()
     p = PRODUCTS.objects.get(p_id=pid)
@@ -135,6 +139,7 @@ def update(request, pid):
 
     if request.method == "POST":
         enddate = request.POST['endate']
+        price = int(request.POST['min_bid'])
         enddate = pd.to_datetime(enddate).date()
         form = forms.addproductForm(
             request.POST, request.FILES, instance=productinfo)
@@ -142,6 +147,10 @@ def update(request, pid):
         if form.is_valid():
             if enddate <= today:
                 messages.error(request, 'Auction End-Date is not valid !')
+                diction = {'title': "Product Update", 'productinfo': form, }
+                return render(request, 'ebay/productupdate.html', context=diction)
+            elif price < 0:
+                messages.error(request, 'Price cant be negative !')
                 diction = {'title': "Product Update", 'productinfo': form, }
                 return render(request, 'ebay/productupdate.html', context=diction)
             form.save(commit=True)
@@ -152,7 +161,7 @@ def update(request, pid):
     return render(request, 'ebay/productupdate.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def deletion(request, pid):
     today = date.today()
     if BIDS.objects.filter(Q(product=pid), Q(product__endate=today)).exists():
@@ -168,7 +177,7 @@ def deletion(request, pid):
     return redirect('ebay:myproduct')
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def mybids(request):
     productstatus()
     query = ""
@@ -190,7 +199,7 @@ def mybids(request):
     return render(request, 'ebay/mybids.html', context=diction)
 
 
-@login_required(login_url='/account/login')
+@login_required(login_url='/accounts/login')
 def biddelete(request, serial):
     BIDS.objects.get(serial=serial).delete()
     messages.error(request, 'Bid Deleted Successfully !')
@@ -218,8 +227,11 @@ def productinfo(request, pid):
         ownercheck = PRODUCTS.objects.filter(
             owner=request.user, p_id=p.p_id).exists()
         if request.method == "POST":
-            price = request.POST["bidprice"]
-            if price < p.min_bid:
+            price = int(request.POST["bidprice"])
+            if price < 0:
+                messages.error(
+                    request, 'negative value is not accepted!!!')
+            elif price < p.min_bid:
                 messages.error(
                     request, 'bidding price cant be lower than minimum!!!')
             elif BIDS.objects.filter(product=pid, bider=request.user).exists():

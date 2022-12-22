@@ -18,7 +18,7 @@ class PRODUCTS(models.Model):
         Category, on_delete=models.CASCADE, default=True, null=False)
     p_photo = models.ImageField(upload_to='images/')
     endate = models.DateField()
-    min_bid = models.CharField(max_length=20)
+    min_bid = models.IntegerField()
     owner = models.ForeignKey(
         to=User, db_column="owner", on_delete=models.CASCADE, default=True, null=False)
     created_at = models.DateTimeField(default=datetime.now, blank=True)

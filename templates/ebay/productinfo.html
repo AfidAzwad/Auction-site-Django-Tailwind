@@ -30,7 +30,7 @@
           <h2 class="text-3xl font-medium uppercase pt-6 mb-2">{{products.pname}} </h2>
           <p class="text-xl font-medium mb-2"><b>Description:</b> {{products.p_des}}</p>
           <p class="text-xl font-medium mb-2"><b>Category:</b> {{products.category.cname}}</p>
-          <p class="text-xl font-medium mb-2"><b>Minimum bid:</b> {{products.min_bid}}</p>
+          <p class="text-xl font-medium mb-2"><b>Minimum bid:</b> ${{products.min_bid}}</p>
           <p class="text-xl font-medium mb-2"><b>End-date:</b> {{products.endate}} 12:00 am</p>
           <p class="text-xl font-medium mb-2"><b>Created at:</b> {{products.created_at}}</p>
           <p class="text-xl font-medium mb-2"><b>Owner:</b> {{products.owner.email}}</p>
@@ -55,7 +55,7 @@
                             {% elif ownercheck %}
                                     <p class="arial text-xl font-bold text-red-700">Product Owner can't bid !</p>
                             {% else %}
-                                      <input class="border-2 border-green-800 rounded" type="input" placeholder="$0" name="bidprice" value="$">
+                                      <input class="border-2 border-green-800 rounded" type="input" placeholder="$0" name="bidprice">
                                       <input class="font-bold text-lg bg-green-500 border-green-500 py-1 px-4 rounded hover:bg-green-700" href = "{% url 'ebay:productinfo' pid=products.p_id %}" type="submit" value="BID">
                             {% endif %}
                        {% else %}
@@ -101,7 +101,7 @@
                   </thead>
                     <tr >
                     <td class="p-1 border-2 border-blue-150 bg-gray-300 tracking-wide text-center">{{bid.bider.email}}</td>
-                    <td class="p-1 border-2 border-blue-150 bg-gray-300 tracking-wide text-center">{{bid.price}}</td>
+                    <td class="p-1 border-2 border-blue-150 bg-gray-300 tracking-wide text-center">${{bid.price}}</td>
                     </tr>
                   </table>
               </div>
