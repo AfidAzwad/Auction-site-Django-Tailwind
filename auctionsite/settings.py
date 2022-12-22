@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'auctionsite.wsgi.application'
 #     }
 # }
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 DATABASES = {
     "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
