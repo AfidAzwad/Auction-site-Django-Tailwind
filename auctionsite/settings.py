@@ -16,7 +16,6 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -26,7 +25,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','web-production-b78a.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
+                 'web-production-b78a.up.railway.app']
 
 # Application definition
 
@@ -89,22 +89,22 @@ WSGI_APPLICATION = 'auctionsite.wsgi.application'
 #     }
 # }
 
-# DATABASE_URL = os.getenv("DATABASE_URL")
-
-# DATABASES = {
-#     "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
-# }
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '<PGDATABASE>',
-        'USER': '<PGUSER>',
-        'PASSWORD': '<PGPASSWORD>',
-        'HOST': '<PGHOST>',
-        'PORT': '<PGPORT>',
-    }
+    "default": dj_database_url.config(default=DATABASE_URL, conn_max_age=1800),
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': '<PGDATABASE>',
+#         'USER': '<PGUSER>',
+#         'PASSWORD': '<PGPASSWORD>',
+#         'HOST': '<PGHOST>',
+#         'PORT': '<PGPORT>',
+#     }
+# }
 
 
 # Password validation
