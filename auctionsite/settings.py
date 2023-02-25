@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from django.contrib import messages
 import cloudinary_storage
-# import django_heroku
+import django_heroku
 import dj_database_url
 
 # for railway app deploy
@@ -178,4 +178,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
