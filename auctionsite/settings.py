@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from django.contrib import messages
 import cloudinary_storage
-import django_heroku
+# import django_heroku
 import dj_database_url
 
 # for railway app deploy
@@ -23,10 +23,9 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost',
-                 'auctionsitedemo.up.railway.app']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -179,4 +178,4 @@ EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
