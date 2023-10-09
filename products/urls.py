@@ -7,6 +7,4 @@ router = DefaultRouter()
 router.register(r'product', ProductViewSet)
 router.register(r'category', CategoryViewSet)
 
-print(router.urls)
-
 urlpatterns = router.urls

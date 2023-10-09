@@ -34,6 +34,17 @@ class ProductViewSet(ModelViewSet):
     pagination_class = PageNumberPagination
     page_size = 5
     
+    def get_queryset(self):
+        user = self.request.user
+        # Check if a query parameter, e.g., 'owner_only', is present in the request
+        owner_only = self.request.query_params.get('owner_only', False)
+
+        if owner_only:
+            queryset = PRODUCT.objects.filter(product_owner=user)
+        else:
+            queryset = PRODUCT.objects.all()
+        return queryset
+    
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return []
