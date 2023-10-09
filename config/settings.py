@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     
     # custom
     'users',
+    'products',
     'auctions',
     
     #3rd party
