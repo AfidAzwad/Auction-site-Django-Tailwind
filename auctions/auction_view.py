@@ -1,5 +1,5 @@
-from .models import AUCTION, BID
-from .serializers import AuctionSerializer, BidSerializer
+from .models import AUCTION
+from .serializers import AuctionSerializer
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated

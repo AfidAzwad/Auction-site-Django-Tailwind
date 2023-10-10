@@ -21,7 +21,7 @@ class AUCTION(models.Model):
 
 
 class BID(models.Model):
-    serial = models.AutoField(primary_key=True)
+    bid_id = models.AutoField(primary_key=True)
     product_id = models.ForeignKey(PRODUCT, db_column="product", on_delete=models.CASCADE, default=True, null=False)
     bider_id = models.ForeignKey(User, db_column="bider", on_delete=models.CASCADE, default=True, null=False)
     bid_amount = models.CharField(max_length=20)
@@ -29,7 +29,7 @@ class BID(models.Model):
 
     @staticmethod
     def get_all_products():
-        return BID.objects.all().order_by('-serial')
+        return BID.objects.all().order_by('-bid_id')
 
     def __str__(self):
-        return str(self.serial)
+        return str(self.product_id)

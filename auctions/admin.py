@@ -9,5 +9,5 @@ class AuctionAdmin(admin.ModelAdmin):
 
 @admin.register(BID)
 class BidAdmin(admin.ModelAdmin):
-    list_display = ('serial', 'product_id', 'bider_id', 'bid_amount', 'auction_id')
+    list_display = ('bid_id', 'product_id', 'bider_id', 'bid_amount', 'auction_id')
     list_filter = ('product_id', 'auction_id', 'bider_id') 
